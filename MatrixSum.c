@@ -43,10 +43,14 @@ int main(){
                 args->i=i;
                 args->j=j;
                 pthread_create(&tids[i][j], NULL, suma, (void *)args);
-                pthread_join(tids[i][j], NULL);
+                
         }
     }
-   
+    for(int i=0; i<M; i++){
+        for(int j=0; j<N; j++){
+            pthread_join(tids[i][j], NULL);
+        }
+    }
     
     printResultado();
     
