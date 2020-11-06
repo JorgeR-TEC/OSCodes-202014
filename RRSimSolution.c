@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 int count=0;
-int pid=0;
+_Atomic int pid=0;
 typedef struct Processes{
 	int id;
 	int remainingTime;
@@ -52,26 +52,20 @@ void printQueue(){
 void *user(void *args){//producer
 	int id=*(int *)args;
 	int processesToCreate=(rand()%10)+5;
-	for(int i=1; i<6; i++){
+	for(int i=0; i<processesToCreate; i++){
         int rTime=rand()%30;
-        printf("Process %d created with burst %d\n", i, rTime);
-        enqueue(createProcess(i, rTime));
+        int currentPid=pid++;
+        printf("User %d: created process %d with burst %d\n",id, currentPid, rTime);
+        enqueue(createProcess(currentPid, rTime));
     }
 }
 
 void *cpu(void *args){//consumer
 	int id=*(int *)args;
-}
-
-
-
-
-int main(){
-   
 	int quantum=4;
 	while(count>0){
 	    Process *p=dequeue();
-	    printf("Loading process %d\n",p->id);
+	    printf("CPU %d is loading process %d\n",id, p->id);
 	    int i;
 	    for(i=0; i<quantum; i++){
 	        p->remainingTime--;
@@ -91,7 +85,20 @@ int main(){
     	    }
     	    enqueue(p);
 	    }
-	    
 	}
+}
+
+
+
+
+int main(){
+   
+	pthread_t user1, cpu1;
+	int id1=1; 
+	int id2=2;
+	pthread_create(&user1, NULL, user, (void *)&id1);
+	pthread_join(user1, NULL);
+	pthread_create(&cpu1, NULL, cpu, (void *)&id1);
+	pthread_join(cpu1, NULL);
 	return 0;
 }
