@@ -1,0 +1,15 @@
+Letter: h
+Page: 1
+Offset of letter h in page 1: 3
+[1|3]
+p  d
+Size of each frame and page is 4 bytes
+
+Which frame is page 1? Frame 6
+What is the physical address of frame 6?6*4=24 byte
+	multiply the number of the frame times the size of the frame
+[6|3]
+f  d
+
+What is the physical address of letter h?24+3=27
+	Sum the physical address of the frame plus the offset
